@@ -20,7 +20,7 @@ class ConvergingLens:
     
         if (self.pos_obj + self.focal) == 0:
             self.pos_img = -1000
-            self.gamma = 1000 / focale
+            self.gamma = 1000 / self.focal
     
         if self.pos_obj == 0:
             self.pos_aa = 0
