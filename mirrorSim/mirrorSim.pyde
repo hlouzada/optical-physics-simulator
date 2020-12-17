@@ -52,6 +52,9 @@ class ConcaveMirror(object):
         # Focus
         line(-self.focal_length, -2, -self.focal_length, 2)
         text("F", -self.focal_length, -5)
+        # Origin
+        line(-self.focal_length*2, -2, -self.focal_length*2, 2)
+        text("O", -self.focal_length*2, -5)
         popMatrix()
       
     # Draws the object    
@@ -67,7 +70,7 @@ class ConcaveMirror(object):
     # Draws the image
     def draw_image(self, image_color):
         pushMatrix()
-        translate(self.position.x + self.image_position, self.position.y)
+        translate((self.position.x - self.focal_length*2) + self.image_position, self.position.y)
         scale(pow(self.gamma, 2), abs(self.gamma))
         if self.gamma < 0:
             rotate(PI)
