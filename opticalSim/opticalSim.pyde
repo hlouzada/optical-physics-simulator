@@ -267,7 +267,7 @@ def painel(mirror):
     else:
         text("Virtual Object", width / 12, height - 5)
 
-    if -mirror.image_position < 0:
+    if mirror.image_position < 0:
         text("Virtual Image", width / 4, height - 5)
     else:
         text("Real Image", width / 4, height - 5)

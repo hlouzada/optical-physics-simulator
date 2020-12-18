@@ -1,8 +1,8 @@
-# This Python file uses the following encoding: utf-8
+#! python
+# -*- coding: utf-8 -*-
+
 
 # Class that defines a concave mirror
-
-
 class ConcaveMirror(object):
 
     def __init__(self, radius, position, img, gray1, blue1):
@@ -27,7 +27,7 @@ class ConcaveMirror(object):
     def _calculate(self):
         # Verificar para termos certeza que não estamos dividindo por zero
         if (self.object_position + self.focal_length) != 0 and self.object_position != 0:
-            self.image_position = - \
+            self.image_position = \
                 (self.object_position * self.focal_length) / \
                 (self.object_position + self.focal_length)
             self.gamma = float(self.focal_length) / \
@@ -65,7 +65,7 @@ class ConcaveMirror(object):
         text("F", -self.focal_length, -5)
         # Origin
         line(-self.focal_length * 2, -2, -self.focal_length * 2, 2)
-        text("O", -self.focal_length * 2, -5)
+        text("C", -self.focal_length * 2, -5)
         popMatrix()
 
     # Draws the object
@@ -81,7 +81,7 @@ class ConcaveMirror(object):
     # Draws the image
     def draw_image(self, image_color):
         pushMatrix()
-        translate(self.position.x + self.image_position, self.position.y)
+        translate(self.position.x - self.image_position, self.position.y)
         scale(pow(self.gamma, 2), abs(self.gamma))
         if self.gamma < 0:
             rotate(PI)
@@ -97,42 +97,41 @@ class ConcaveMirror(object):
         strokeWeight(2)
         stroke(ray_color, .8)
         if self.object_position < 0:
-            line(self.object_position, -self.height_object, 0, -
-                 self.height_object)  # raio paralelo ao eixo ótico
-            line(0, -self.height_object, -self.position.x, -self.height_object +
-                 (self.position.x * self.height_object) / self.focal_length)  # raio que passa pelo foco
-            if (self.object_position + self.focal_length) != 0:
-                line(self.object_position, -self.height_object, 0, -self.height_object *
-                     self.focal_length / (self.object_position + self.focal_length))
-                line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length), -
-                     self.position.x, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
+            line(self.object_position, -self.height_object, 0, 0)
+            line(self.object_position, -self.height_object, 0, -self.height_object)
+            stroke(ray_color, .6)
+            line(0, 0, -self.position.x, -self.gamma*self.height_object*self.position.x/self.image_position)
+            line(0, -self.height_object, -self.position.x, -self.height_object + (self.position.x * self.height_object) / self.focal_length)
+            if (self.object_position + self.focal_length) < 0:
+                line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length), -self.position.x, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
+                stroke(ray_color, .8)
+                line(self.object_position, -self.height_object, 0, -self.height_object *self.focal_length / (self.object_position + self.focal_length))
+                
 
-            if (self.object_position + self.focal_length) > 0:
+            else:
+                #line()
                 stroke(ray_color, 0.3)
                 line(-self.focal_length, 0,
                      self.object_position, -self.height_object)
-                line(self.image_position, -self.gamma *
+                line(-self.image_position, -self.gamma *
                      self.height_object, 0, -self.gamma * self.height_object)
-                line(self.image_position, -self.gamma *
+                line(-self.image_position, -self.gamma *
                      self.height_object, 0, -self.height_object)
-                line(self.image_position, -self.gamma * self.height_object,
+                line(-self.image_position, -self.gamma * self.height_object,
                      self.object_position, -self.height_object)
 
         if self.object_position > 0:
-            stroke(ray_color, 0.3)
-            line(-self.position.x, self.height_object * self.position.x / self.object_position,
-                 self.position.x, -self.height_object * self.position.x / self.object_position)
-            line(-self.position.x, -self.height_object, 0, -self.height_object)
-            line(0, -self.height_object, self.position.x, -
-                 self.height_object * (1 - self.position.x / self.focal_length))
-            stroke(ray_color, .8)
-            line(-self.position.x, -self.height_object * (-self.position.x + self.focal_length) / (self.object_position +
-                                                                                                   self.focal_length), 0, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
-            line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length),
-                 self.position.x, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
+            line(self.object_position, -self.height_object, 0, 0)
             line(0, -self.height_object, self.object_position, -self.height_object)
-            line(0, -self.height_object * self.focal_length / (self.object_position +
-                                                               self.focal_length), self.object_position, -self.height_object)
+            line(self.object_position, -self.height_object, 0, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
+            stroke(ray_color, .6)
+            line(0, 0, self.position.x, self.height_object * self.position.x /self.object_position)
+            line(0, -self.height_object, self.position.x, -self.height_object *(1 + self.position.x / self.focal_length))
+            line(0, -self.gamma * self.height_object, self.position.x, -self.gamma * self.height_object)
+            stroke(ray_color, .25)
+            line(0, 0, -self.position.x, -self.height_object * self.position.x /self.object_position)
+            line(0, -self.gamma * self.height_object, -self.position.x, -self.gamma * self.height_object)
+            line(0, -self.height_object, -self.position.x, -self.height_object *(1 - self.position.x / self.focal_length))
 
         popMatrix()
 
@@ -174,7 +173,7 @@ class ConvexMirror(ConcaveMirror):
         text("F", -self.focal_length, -5)
         # Origin
         line(-self.focal_length * 2, -2, -self.focal_length * 2, 2)
-        text("O", -self.focal_length * 2, -5)
+        text("C", -self.focal_length * 2, -5)
         popMatrix()
 
     def draw_rays(self, ray_color):
@@ -183,22 +182,17 @@ class ConvexMirror(ConcaveMirror):
         strokeWeight(2)
         stroke(ray_color, .8)
         if self.object_position < 0:
-            line(self.object_position, -self.height_object, 0, -
-                 self.height_object)  # paralelo ao eixo optico
-            line(0, -self.height_object, -self.position.x, -self.height_object *
-                 (1 - self.position.x / self.focal_length))  # reflete com prologamento no F
-            # passa pela origem
             line(self.object_position, -self.height_object, 0, 0)
-            line(self.object_position, -self.height_object, 0, -self.height_object *
-                 self.focal_length / (self.object_position + self.focal_length))  # raio que se prolonga no F
-            line(0, -self.gamma * self.height_object, -self.position.x, -
-                 self.gamma * self.height_object)  # reflete com prolongamento paralelo
-            stroke(ray_color, .3)
-            line(0, 0, self.position.x, -self.height_object * self.position.x /
-                 self.object_position)  # prolongamento pela origem
-            line(0, -self.gamma * self.height_object, self.position.x, -
-                 self.gamma * self.height_object)  # prolongamento paralelo
-            line(0, -self.height_object, -self.focal_length, 0)
+            line(0, -self.height_object, self.object_position, -self.height_object)
+            line(self.object_position, -self.height_object, 0, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
+            stroke(ray_color, .6)
+            line(0, 0, -self.position.x, -self.height_object * self.position.x /self.object_position)
+            line(0, -self.gamma * self.height_object, -self.position.x, -self.gamma * self.height_object)
+            line(0, -self.height_object, -self.position.x, -self.height_object *(1 - self.position.x / self.focal_length))
+            stroke(ray_color, .25)
+            line(0, 0, self.position.x, -self.height_object * self.position.x /self.object_position)
+            line(0, -self.height_object, self.position.x, -self.height_object *(1 + self.position.x / self.focal_length))
+            line(0, -self.gamma * self.height_object, self.position.x, -self.gamma * self.height_object)
 
         if self.object_position > 0:
             line(-self.position.x, self.height_object * self.position.x / self.object_position,
@@ -209,9 +203,9 @@ class ConvexMirror(ConcaveMirror):
                  (1 - self.position.x / self.focal_length))  # a partir do F'
             if self.object_position + self.focal_length < 0:  # objeto antes do F
                 line(-self.position.x, -self.height_object * (-self.position.x + self.focal_length) / (self.object_position +
-                                                                                                       self.focal_length), 0, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
-                line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length),
-                     self.position.x, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
+                                                                self.focal_length), 0, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
+                line(0, self.height_object * self.focal_length / (self.object_position - self.focal_length),
+                     self.position.x, self.height_object * self.focal_length / (self.object_position - self.focal_length))
                 stroke(ray_color, 0.25)  # prolongamentos
                 line(0, -self.height_object, self.object_position, -
                      self.height_object)  # paralelo ao eixo optico
@@ -228,9 +222,9 @@ class ConvexMirror(ConcaveMirror):
                 stroke(ray_color, 0.25)  # prolongamentos
                 line(0, -self.height_object, self.object_position, -
                      self.height_object)  # paralelo ao eixo optico
-                line(self.image_position, -self.height_object * self.focal_length / (self.object_position + self.focal_length),
+                line(-self.image_position, -self.height_object * self.focal_length / (self.object_position + self.focal_length),
                      self.position.x, -self.height_object * self.focal_length / (self.object_position + self.focal_length))  # paralelo ao eixo optico
-                line(self.image_position, -self.height_object * self.focal_length /
+                line(-self.image_position, -self.height_object * self.focal_length /
                      (self.object_position + self.focal_length), 0, -self.height_object)  # a partir do F'
                 line(0, -self.height_object * self.focal_length / (self.object_position +
                                                                    self.focal_length), self.object_position, -self.height_object)

@@ -1,5 +1,5 @@
-# This Python file uses the following encoding: utf-8
-
+#! python
+# -*- coding: utf-8 -*-
 
 class ConvergingLens(object):
     def __init__(self, focal, pos, img, gray1, blue1):
