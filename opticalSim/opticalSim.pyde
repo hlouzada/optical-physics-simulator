@@ -41,7 +41,6 @@ convergingLens = 1
 divergingLens = 2
 convexMirror = 3
 concaveMirror = 4
-lensAssociation = 5
 # Shows if we are using lens or mirror
 #global type
 
@@ -60,8 +59,6 @@ def setup():
     convexHighlight = loadImage("convex-button-pressed.png")
     concaveImg = loadImage("concave-button.png")
     concaveHighlight = loadImage("concave-button-pressed.png")
-    associationImg = loadImage("lens-button.png")
-    associationHighlight = loadImage("lens-button-pressed.png")
     menuImg = loadImage("menu-button.png")
     menuHighlight = loadImage("menu-button-pressed.png")
     
@@ -70,20 +67,17 @@ def setup():
     global divergingButton
     global convexButton
     global concaveButton
-    global associationButton
     global menuButton
     # Declaring buttons
     convergingButton = Button(PVector(100, 55), 800, 80, convergingImg, convergingHighlight)
     divergingButton = Button(PVector(100, 145), 800, 80, divergingImg, divergingHighlight)
     convexButton = Button(PVector(100, 235), 800, 80, convexImg, convexHighlight)
     concaveButton = Button(PVector(100, 325), 800, 80, concaveImg, concaveHighlight)
-    #associationButton = Button(PVector(100, 385), 800, 80, associationImg, associationHighlight)
     menuButton = Button(PVector(590, 10), 400, 40, menuImg, menuHighlight)
     
     # Setting up mirrors:
     mirrorSetup()
     lensSetup()
-    associationSetup()
 
 def draw():
     # Checking screen and drawing different screens
@@ -101,9 +95,6 @@ def draw():
     elif screenState == concaveMirror:
         type = "mirrors"
         mirrorDraw(concave, type)
-    elif screenState == lensAssociation:
-        drawAssociation(lens1, lens2)
-        type = "lens"
     else:
         textSize(24)
         strokeWeight(1)
@@ -170,23 +161,6 @@ def lensSetup():
     frameRate(15)
     textAlign(CENTER, BASELINE)
     
-def associationSetup():
-    global lens1, lens2
-    
-    focal = width / 8
-
-    w1 = int(width / 2)
-    h1 = int(height / 2 - h2)
-    
-    lens1 = ConvergingLens(focal, PVector(w1 + w1/4, h1), img, gray1, blue1)
-    lens2 = ConvergingLens(-focal, PVector(w1 - w1/4, h1), img, gray1, blue1)
-    lens1.set_object(PVector(-2 * focal, 0), height / 10)
-    lens2.set_object(PVector((lens1.position.x + lens1.image_position)*pow(lens1.gamma, 2), 0), (height / 10)*abs(lens1.gamma))
-    
-    smooth()
-    strokeCap(SQUARE)
-    frameRate(15)
-    textAlign(CENTER, BASELINE)
     
 """
 ------------------------ DRAW FUNCTIONS----------------------------------
@@ -200,7 +174,6 @@ def drawMenu():
     divergingButton.buttonDraw()
     convexButton.buttonDraw()
     concaveButton.buttonDraw()
-    #associationButton.buttonDraw()
 
 # Drawing the mirror types
 def mirrorDraw(mirror, type):
@@ -231,37 +204,6 @@ def mirrorDraw(mirror, type):
     painel(mirror)
     
     
-def drawAssociation(mirror1, mirror2):
-    global over
-    background(0xff220851)
-    fill(gray1)
-    textSize(12)
-    noTint()
-    menuButton.buttonDraw()
-    
-    if mouseX > (w1 + mirror1.object_position - 30) and mouseX < (w1 + mirror1.object_position + 30) and mouseY < (h1 + mirror1.height_object) and mouseY > (h1 - mirror1.height_object):
-        over = True
-        active_color = red1
-    else:
-        over = False
-        active_color = gray1
-
-    if move:
-        mirror1.set_object(PVector(mouseX - w1, 0))
-        mirror2.set_object(PVector((mirror1.position.x + mirror1.image_position)*pow(mirror1.gamma, 2), 0), (height / 10)*abs(mirror1.gamma))
-
-    mirror1.draw_lens()
-    mirror1.draw_object(active_color)
-    #mirror1.draw_image(active_color)
-    #mirror1.draw_rays(red1)
-
-    mirror2.draw_lens()
-    #mirror2.draw_object(active_color)
-    mirror2.draw_image(active_color)
-    #mirror2.draw_rays(red1)
-    painel(mirror1)
-
-    
 
 """
 ------------------------ MOUSE FUNCTIONS ----------------------------------
@@ -285,8 +227,6 @@ def mousePressed():
             screenState = convexMirror
         if concaveButton.over:
             screenState = concaveMirror
-        if associationButton.over:
-            screenState = lensAssociation
     
     
 def mouseReleased():
