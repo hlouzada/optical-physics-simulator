@@ -49,7 +49,7 @@ lensAssociation = 5
 
 def setup():
     size(1000, 500)
-    background(0xff220851)
+    background(0xff180639)
     
     # Loading the images from the buttons
     convergingImg = loadImage("converging-button.png")
@@ -142,7 +142,7 @@ def mirrorSetup():
 
     concave = ConcaveMirror(radius, PVector(w1, h1), img, gray1, blue1)
     convex = ConvexMirror(radius, PVector(w1, h1), img, gray1, blue1)
-    concave.set_object(PVector(concave.focal_length, 0), height / 10)
+    concave.set_object(PVector(-concave.focal_length, 0), height / 10)
     convex.set_object(PVector(convex.focal_length, 0), height / 10)
 
     smooth()
@@ -176,7 +176,7 @@ def lensSetup():
 # Drawing the menu buttons    
 def drawMenu():
     noTint()
-    background(0xff220851)
+    background(0xff180639)
     convergingButton.buttonDraw()
     divergingButton.buttonDraw()
     convexButton.buttonDraw()
@@ -186,7 +186,7 @@ def drawMenu():
 # Drawing the mirror types
 def mirrorDraw(mirror, type):
     global over
-    background(0xff220851)
+    background(0xff180639)
     fill(gray1)
     textSize(12)
     noTint()
