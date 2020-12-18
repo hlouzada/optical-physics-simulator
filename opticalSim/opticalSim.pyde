@@ -89,20 +89,20 @@ def draw():
     if screenState == menuScreen:
         drawMenu()
     elif screenState == convergingLens:
-        type = lens
+        type = "lens"
         mirrorDraw(converging, type)
     elif screenState == divergingLens:
-        type = lens
+        type = "lens"
         mirrorDraw(diverging, type)
     elif screenState == convexMirror:
-        type = mirrors
+        type = "mirrors"
         mirrorDraw(convex, type)
     elif screenState == concaveMirror:
-        type = mirrors
+        type = "mirrors"
         mirrorDraw(concave, type)
     elif screenState == lensAssociation:
         drawLensAssociation()
-        type = lens
+        type = "lens"
     else:
         textSize(24)
         strokeWeight(1)
@@ -159,8 +159,8 @@ def lensSetup():
     w1 = int(width / 2)
     h1 = int(height / 2 - h2)
     
-    converging = ConvergingLens(focal, PVector(w1,h1))
-    diverging = DivergingLens(-focal, PVector(w1, h1))
+    converging = ConvergingLens(focal, PVector(w1,h1), img, gray1, blue1)
+    diverging = DivergingLens(-focal, PVector(w1, h1), img, gray1, blue1)
     converging.set_object(PVector(-2 * focal, 0), height / 10)
     diverging.set_object(PVector(-2 * focal, 0), height / 10)
 
@@ -202,9 +202,9 @@ def mirrorDraw(mirror, type):
     if move:
         mirror.set_object(PVector(mouseX - w1, 0))
 
-    if type == lens:
+    if type == "lens":
         mirror.draw_lens()
-    elif type == mirrors:
+    elif type == "mirrors":
         mirror.draw_mirror()
     mirror.draw_object(active_color)
     mirror.draw_image(active_color)
