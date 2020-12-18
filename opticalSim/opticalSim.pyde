@@ -181,7 +181,7 @@ def associationSetup():
     lens1 = ConvergingLens(focal, PVector(w1 + w1/4, h1), img, gray1, blue1)
     lens2 = ConvergingLens(-focal, PVector(w1 - w1/4, h1), img, gray1, blue1)
     lens1.set_object(PVector(-2 * focal, 0), height / 10)
-    lens2.set_object(PVector((mirror1.pos.x + mirror1.pos_img)*pow(mirror1.gamma, 2), 0), (height / 10)*abs(mirror1.gamma))
+    lens2.set_object(PVector((lens1.position.x + lens1.image_position)*pow(lens1.gamma, 2), 0), (height / 10)*abs(lens1.gamma))
     
     smooth()
     strokeCap(SQUARE)
@@ -239,7 +239,7 @@ def drawAssociation(mirror1, mirror2):
     noTint()
     menuButton.buttonDraw()
     
-    if mouseX > (w1 + mirror1.pos_obj - 30) and mouseX < (w1 + mirror1.pos_obj + 30) and mouseY < (h1 + mirror1.h_obj) and mouseY > (h1 - mirror1.h_obj):
+    if mouseX > (w1 + mirror1.object_position - 30) and mouseX < (w1 + mirror1.object_position + 30) and mouseY < (h1 + mirror1.height_object) and mouseY > (h1 - mirror1.height_object):
         over = True
         active_color = red1
     else:
@@ -248,18 +248,18 @@ def drawAssociation(mirror1, mirror2):
 
     if move:
         mirror1.set_object(PVector(mouseX - w1, 0))
-        mirror2.set_object(PVector((mirror1.pos.x + mirror1.pos_img)*pow(mirror1.gamma, 2), 0), (height / 10)*abs(mirror1.gamma))
+        mirror2.set_object(PVector((mirror1.position.x + mirror1.image_position)*pow(mirror1.gamma, 2), 0), (height / 10)*abs(mirror1.gamma))
 
     mirror1.draw_lens()
     mirror1.draw_object(active_color)
-    mirror1.draw_image(active_color)
-    mirror1.draw_rays(red1)
+    #mirror1.draw_image(active_color)
+    #mirror1.draw_rays(red1)
 
     mirror2.draw_lens()
-    mirror2.draw_object(active_color)
+    #mirror2.draw_object(active_color)
     mirror2.draw_image(active_color)
-    mirror2.draw_rays(red1)
-    painel()
+    #mirror2.draw_rays(red1)
+    painel(mirror1)
 
     
 
