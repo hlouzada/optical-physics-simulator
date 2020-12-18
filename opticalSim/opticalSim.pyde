@@ -73,11 +73,11 @@ def setup():
     global associationButton
     global menuButton
     # Declaring buttons
-    convergingButton = Button(PVector(100, 25), 800, 80, convergingImg, convergingHighlight)
-    divergingButton = Button(PVector(100, 115), 800, 80, divergingImg, divergingHighlight)
-    convexButton = Button(PVector(100, 205), 800, 80, convexImg, convexHighlight)
-    concaveButton = Button(PVector(100, 295), 800, 80, concaveImg, concaveHighlight)
-    associationButton = Button(PVector(100, 385), 800, 80, associationImg, associationHighlight)
+    convergingButton = Button(PVector(100, 55), 800, 80, convergingImg, convergingHighlight)
+    divergingButton = Button(PVector(100, 145), 800, 80, divergingImg, divergingHighlight)
+    convexButton = Button(PVector(100, 235), 800, 80, convexImg, convexHighlight)
+    concaveButton = Button(PVector(100, 325), 800, 80, concaveImg, concaveHighlight)
+    #associationButton = Button(PVector(100, 385), 800, 80, associationImg, associationHighlight)
     menuButton = Button(PVector(590, 10), 400, 40, menuImg, menuHighlight)
     
     # Setting up mirrors:
@@ -200,7 +200,7 @@ def drawMenu():
     divergingButton.buttonDraw()
     convexButton.buttonDraw()
     concaveButton.buttonDraw()
-    associationButton.buttonDraw()
+    #associationButton.buttonDraw()
 
 # Drawing the mirror types
 def mirrorDraw(mirror, type):
