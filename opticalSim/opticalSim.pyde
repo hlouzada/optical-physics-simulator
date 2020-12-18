@@ -1,5 +1,6 @@
 # imports classes from auxiliary files
 from mirror import ConcaveMirror, ConvexMirror
+from lens import ConvergingLens, DivergingLens
 
 # Class that defines a button
 class Button(object):
@@ -41,6 +42,9 @@ divergingLens = 2
 convexMirror = 3
 concaveMirror = 4
 lensAssociation = 5
+# Shows if we are using lens or mirror
+#global type
+
 
 
 def setup():
@@ -78,21 +82,27 @@ def setup():
     
     # Setting up mirrors:
     mirrorSetup()
+    lensSetup()
 
 def draw():
     # Checking screen and drawing different screens
     if screenState == menuScreen:
         drawMenu()
     elif screenState == convergingLens:
-        drawConvergingLens()
+        type = lens
+        mirrorDraw(converging, type)
     elif screenState == divergingLens:
-        drawDivergingLens()
+        type = lens
+        mirrorDraw(diverging, type)
     elif screenState == convexMirror:
-        mirrorDraw(convex)
+        type = mirrors
+        mirrorDraw(convex, type)
     elif screenState == concaveMirror:
-        mirrorDraw(concave)
+        type = mirrors
+        mirrorDraw(concave, type)
     elif screenState == lensAssociation:
         drawLensAssociation()
+        type = lens
     else:
         textSize(24)
         strokeWeight(1)
@@ -101,16 +111,6 @@ def draw():
         textAlign(CENTER, CENTER)
         text("Oops, Something went wrong.", width/2, height/2, width, height,)
 
-    
-def drawConvergingLens():
-    fill(255)
-    rect(0,0,1000, 700)
-def drawDivergingLens():
-    fill(255,0,0)
-    rect(0,0,1000, 700)
-def drawLensAssociation():
-    fill(0)
-    rect(0,0,1000, 700)
     
     
 """
@@ -150,6 +150,25 @@ def mirrorSetup():
     frameRate(15)
     textAlign(CENTER, BASELINE)
     
+def lensSetup():
+    
+    global converging, diverging
+    
+    focal = width / 8
+
+    w1 = int(width / 2)
+    h1 = int(height / 2 - h2)
+    
+    converging = ConvergingLens(focal, PVector(w1,h1))
+    diverging = DivergingLens(-focal, PVector(w1, h1))
+    converging.set_object(PVector(-2 * focal, 0), height / 10)
+    diverging.set_object(PVector(-2 * focal, 0), height / 10)
+
+    smooth()
+    strokeCap(SQUARE)
+    frameRate(15)
+    textAlign(CENTER, BASELINE)
+    
 """
 ------------------------ DRAW FUNCTIONS----------------------------------
 """
@@ -164,7 +183,8 @@ def drawMenu():
     concaveButton.buttonDraw()
     associationButton.buttonDraw()
 
-def mirrorDraw(mirror):
+# Drawing the mirror types
+def mirrorDraw(mirror, type):
     global over
     background(0xff220851)
     fill(gray1)
@@ -182,11 +202,25 @@ def mirrorDraw(mirror):
     if move:
         mirror.set_object(PVector(mouseX - w1, 0))
 
-    mirror.draw_mirror()
+    if type == lens:
+        mirror.draw_lens()
+    elif type == mirrors:
+        mirror.draw_mirror()
     mirror.draw_object(active_color)
     mirror.draw_image(active_color)
     mirror.draw_rays(red1)
     painel(mirror)
+    
+    
+def drawConvergingLens():
+    fill(255)
+    rect(0,0,1000, 700)
+def drawDivergingLens():
+    fill(255,0,0)
+    rect(0,0,1000, 700)
+def drawLensAssociation():
+    fill(0)
+    rect(0,0,1000, 700)
 
 """
 ------------------------ MOUSE FUNCTIONS ----------------------------------
