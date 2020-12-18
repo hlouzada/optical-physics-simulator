@@ -41,7 +41,6 @@ convergingLens = 1
 divergingLens = 2
 convexMirror = 3
 concaveMirror = 4
-lensAssociation = 5
 # Shows if we are using lens or mirror
 #global type
 
@@ -60,8 +59,6 @@ def setup():
     convexHighlight = loadImage("convex-button-pressed.png")
     concaveImg = loadImage("concave-button.png")
     concaveHighlight = loadImage("concave-button-pressed.png")
-    associationImg = loadImage("lens-button.png")
-    associationHighlight = loadImage("lens-button-pressed.png")
     menuImg = loadImage("menu-button.png")
     menuHighlight = loadImage("menu-button-pressed.png")
     
@@ -70,14 +67,12 @@ def setup():
     global divergingButton
     global convexButton
     global concaveButton
-    global associationButton
     global menuButton
     # Declaring buttons
-    convergingButton = Button(PVector(100, 25), 800, 80, convergingImg, convergingHighlight)
-    divergingButton = Button(PVector(100, 115), 800, 80, divergingImg, divergingHighlight)
-    convexButton = Button(PVector(100, 205), 800, 80, convexImg, convexHighlight)
-    concaveButton = Button(PVector(100, 295), 800, 80, concaveImg, concaveHighlight)
-    associationButton = Button(PVector(100, 385), 800, 80, associationImg, associationHighlight)
+    convergingButton = Button(PVector(100, 55), 800, 80, convergingImg, convergingHighlight)
+    divergingButton = Button(PVector(100, 145), 800, 80, divergingImg, divergingHighlight)
+    convexButton = Button(PVector(100, 235), 800, 80, convexImg, convexHighlight)
+    concaveButton = Button(PVector(100, 325), 800, 80, concaveImg, concaveHighlight)
     menuButton = Button(PVector(590, 10), 400, 40, menuImg, menuHighlight)
     
     # Setting up mirrors:
@@ -100,9 +95,6 @@ def draw():
     elif screenState == concaveMirror:
         type = "mirrors"
         mirrorDraw(concave, type)
-    elif screenState == lensAssociation:
-        drawLensAssociation()
-        type = "lens"
     else:
         textSize(24)
         strokeWeight(1)
@@ -142,7 +134,7 @@ def mirrorSetup():
 
     concave = ConcaveMirror(radius, PVector(w1, h1), img, gray1, blue1)
     convex = ConvexMirror(radius, PVector(w1, h1), img, gray1, blue1)
-    concave.set_object(PVector(-concave.focal_length, 0), height / 10)
+    concave.set_object(PVector(concave.focal_length, 0), height / 10)
     convex.set_object(PVector(convex.focal_length, 0), height / 10)
 
     smooth()
@@ -169,6 +161,7 @@ def lensSetup():
     frameRate(15)
     textAlign(CENTER, BASELINE)
     
+    
 """
 ------------------------ DRAW FUNCTIONS----------------------------------
 """
@@ -181,7 +174,6 @@ def drawMenu():
     divergingButton.buttonDraw()
     convexButton.buttonDraw()
     concaveButton.buttonDraw()
-    associationButton.buttonDraw()
 
 # Drawing the mirror types
 def mirrorDraw(mirror, type):
@@ -212,15 +204,6 @@ def mirrorDraw(mirror, type):
     painel(mirror)
     
     
-def drawConvergingLens():
-    fill(255)
-    rect(0,0,1000, 700)
-def drawDivergingLens():
-    fill(255,0,0)
-    rect(0,0,1000, 700)
-def drawLensAssociation():
-    fill(0)
-    rect(0,0,1000, 700)
 
 """
 ------------------------ MOUSE FUNCTIONS ----------------------------------
@@ -244,8 +227,6 @@ def mousePressed():
             screenState = convexMirror
         if concaveButton.over:
             screenState = concaveMirror
-        if associationButton.over:
-            screenState = lensAssociation
     
     
 def mouseReleased():
