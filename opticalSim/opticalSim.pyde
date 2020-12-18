@@ -83,6 +83,7 @@ def setup():
     # Setting up mirrors:
     mirrorSetup()
     lensSetup()
+    associationSetup()
 
 def draw():
     # Checking screen and drawing different screens
@@ -101,7 +102,7 @@ def draw():
         type = "mirrors"
         mirrorDraw(concave, type)
     elif screenState == lensAssociation:
-        drawLensAssociation()
+        drawAssociation(lens1, lens2)
         type = "lens"
     else:
         textSize(24)
@@ -169,6 +170,24 @@ def lensSetup():
     frameRate(15)
     textAlign(CENTER, BASELINE)
     
+def associationSetup():
+    global lens1, lens2
+    
+    focal = width / 8
+
+    w1 = int(width / 2)
+    h1 = int(height / 2 - h2)
+    
+    lens1 = ConvergingLens(focal, PVector(w1 + w1/4, h1), img, gray1, blue1)
+    lens2 = ConvergingLens(-focal, PVector(w1 - w1/4, h1), img, gray1, blue1)
+    lens1.set_object(PVector(-2 * focal, 0), height / 10)
+    lens2.set_object(PVector((mirror1.pos.x + mirror1.pos_img)*pow(mirror1.gamma, 2), 0), (height / 10)*abs(mirror1.gamma))
+    
+    smooth()
+    strokeCap(SQUARE)
+    frameRate(15)
+    textAlign(CENTER, BASELINE)
+    
 """
 ------------------------ DRAW FUNCTIONS----------------------------------
 """
@@ -212,15 +231,37 @@ def mirrorDraw(mirror, type):
     painel(mirror)
     
     
-def drawConvergingLens():
-    fill(255)
-    rect(0,0,1000, 700)
-def drawDivergingLens():
-    fill(255,0,0)
-    rect(0,0,1000, 700)
-def drawLensAssociation():
-    fill(0)
-    rect(0,0,1000, 700)
+def drawAssociation(mirror1, mirror2):
+    global over
+    background(0xff220851)
+    fill(gray1)
+    textSize(12)
+    noTint()
+    menuButton.buttonDraw()
+    
+    if mouseX > (w1 + mirror1.pos_obj - 30) and mouseX < (w1 + mirror1.pos_obj + 30) and mouseY < (h1 + mirror1.h_obj) and mouseY > (h1 - mirror1.h_obj):
+        over = True
+        active_color = red1
+    else:
+        over = False
+        active_color = gray1
+
+    if move:
+        mirror1.set_object(PVector(mouseX - w1, 0))
+        mirror2.set_object(PVector((mirror1.pos.x + mirror1.pos_img)*pow(mirror1.gamma, 2), 0), (height / 10)*abs(mirror1.gamma))
+
+    mirror1.draw_lens()
+    mirror1.draw_object(active_color)
+    mirror1.draw_image(active_color)
+    mirror1.draw_rays(red1)
+
+    mirror2.draw_lens()
+    mirror2.draw_object(active_color)
+    mirror2.draw_image(active_color)
+    mirror2.draw_rays(red1)
+    painel()
+
+    
 
 """
 ------------------------ MOUSE FUNCTIONS ----------------------------------
