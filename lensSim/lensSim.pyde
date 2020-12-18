@@ -1,64 +1,64 @@
 class ConvergingLens(object):
     def __init__(self, focal, pos):
-        self.focal = focal
+        self.focal_length = focal
         self.pos = pos
-        self.pos_img = None
-        self.pos_obj = None
+        self.image_position = None
+        self.object_position = None
         self.gamma = None
-        self.h_obj = None
+        self.height_object = None
 
     def set_object(self, pos, height=None):
-        self.pos_obj = pos.x
-        if not self.h_obj or height:
-            self.h_obj = height
+        self.object_position = position.x
+        if not self.height_object or height:
+            self.height_object = height
         self._calcul()
 
     def _calcul(self):
-        if (self.pos_obj + self.focal) != 0 and self.pos_obj != 0:
-            self.pos_img = int(self.pos_obj * self.focal / (self.pos_obj + self.focal))
-            self.gamma = float(self.focal) / float(self.pos_obj + self.focal)
+        if (self.object_position + self.focal_length) != 0 and self.object_position != 0:
+            self.image_position = int(self.object_position * self.focal_length / (self.object_position + self.focal_length))
+            self.gamma = float(self.focal_length) / float(self.object_position + self.focal_length)
 
-        if (self.pos_obj + self.focal) == 0:
-            self.pos_img = -1000
-            self.gamma = 1000 / self.focal
+        if (self.object_position + self.focal_length) == 0:
+            self.image_position = -1000
+            self.gamma = 1000 / self.focal_length
 
-        if self.pos_obj == 0:
+        if self.object_position == 0:
             self.pos_aa = 0
             self.gamma = 1
 
     def draw_lens(self):
         textSize(12)
         pushMatrix()
-        translate(self.pos.x, self.pos.y)  # Centro da origem do sistema de coordenadas
+        translate(self.position.x, self.position.y)  # Centro da origem do sistema de coordenadas
         # Lente
         fill(blue1)
         stroke(blue1)
         strokeWeight(3)
-        line(0, self.pos.y - 15, 0, -self.pos.y + 15)
+        line(0, self.position.y - 15, 0, -self.position.y + 15)
         beginShape(TRIANGLES)
-        vertex(-6, self.pos.y - 15)
-        vertex(6, self.pos.y - 15)
-        vertex(0, self.pos.y)
-        vertex(-6, -self.pos.y + 15)
-        vertex(6, -self.pos.y + 15)
-        vertex(0, -self.pos.y)
+        vertex(-6, self.position.y - 15)
+        vertex(6, self.position.y - 15)
+        vertex(0, self.position.y)
+        vertex(-6, -self.position.y + 15)
+        vertex(6, -self.position.y + 15)
+        vertex(0, -self.position.y)
         endShape()
         # Eixo optico
         strokeWeight(1)
         stroke(gray1)
         fill(gray1)
-        line(-self.pos.x, 0, self.pos.x, 0)
+        line(-self.position.x, 0, self.position.x, 0)
         # Focos
-        line(-self.focal, -2, -self.focal, 2)
-        text("F", -self.focal, -5)
-        line(self.focal, -2, self.focal, 2)
-        text("F'", self.focal, -5)
+        line(-self.focal_length, -2, -self.focal_length, 2)
+        text("F", -self.focal_length, -5)
+        line(self.focal_length, -2, self.focal_length, 2)
+        text("F'", self.focal_length, -5)
         popMatrix()
 
     def draw_object(self, obj_color):
         tint(obj_color)
         pushMatrix()
-        translate(self.pos.x + self.pos_obj, self.pos.y)
+        translate(self.position.x + self.object_position, self.position.y)
         image(img, -height / 6, -height / 8)
         textSize(12)
         text("Object", 0, -height / 8)
@@ -66,7 +66,7 @@ class ConvergingLens(object):
 
     def draw_image(self, img_color):
         pushMatrix()
-        translate(self.pos.x + self.pos_img, self.pos.y)
+        translate(self.position.x + self.image_position, self.position.y)
         scale(pow(self.gamma, 2), abs(self.gamma))
         if self.gamma < 0:
             rotate(PI)
@@ -78,33 +78,33 @@ class ConvergingLens(object):
 
     def draw_rays(self, ray_color):
         pushMatrix()
-        translate(self.pos.x, self.pos.y)
+        translate(self.position.x, self.position.y)
         strokeWeight(2)
         stroke(ray_color, .8)
-        if self.pos_obj < 0:
-            line(self.pos_obj, -self.h_obj, self.pos.x, -self.h_obj * self.pos.x / self.pos_obj)
-            line(self.pos_obj, -self.h_obj, 0, -self.h_obj)
-            line(0, -self.h_obj, self.pos.x, -self.h_obj + (self.pos.x * self.h_obj) / self.focal)
-            if (self.pos_obj + self.focal) != 0:
-                line(self.pos_obj, -self.h_obj, 0, -self.h_obj * self.focal / (self.pos_obj + self.focal))
-                line(0, -self.h_obj * self.focal / (self.pos_obj + self.focal), self.pos.x, -self.h_obj * self.focal / (self.pos_obj + self.focal))
+        if self.object_position < 0:
+            line(self.object_position, -self.height_object, self.position.x, -self.height_object * self.position.x / self.object_position)
+            line(self.object_position, -self.height_object, 0, -self.height_object)
+            line(0, -self.height_object, self.position.x, -self.height_object + (self.position.x * self.height_object) / self.focal_length)
+            if (self.object_position + self.focal_length) != 0:
+                line(self.object_position, -self.height_object, 0, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
+                line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length), self.position.x, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
 
-            if (self.pos_obj + self.focal) > 0:
+            if (self.object_position + self.focal_length) > 0:
                 stroke(ray_color, 0.3)
-                line(-self.focal, 0, self.pos_obj, -self.h_obj)
-                line(self.pos_img, -self.gamma * self.h_obj, 0, -self.gamma * self.h_obj)
-                line(self.pos_img, -self.gamma * self.h_obj, 0, -self.h_obj)
-                line(self.pos_img, -self.gamma * self.h_obj, self.pos_obj, -self.h_obj)
+                line(-self.focal_length, 0, self.object_position, -self.height_object)
+                line(self.image_position, -self.gamma * self.height_object, 0, -self.gamma * self.height_object)
+                line(self.image_position, -self.gamma * self.height_object, 0, -self.height_object)
+                line(self.image_position, -self.gamma * self.height_object, self.object_position, -self.height_object)
 
-        if self.pos_obj > 0:
-            line(-self.pos.x, self.h_obj * self.pos.x / self.pos_obj, self.pos.x, -self.h_obj * self.pos.x / self.pos_obj)
-            line(-self.pos.x, -self.h_obj, 0, -self.h_obj)
-            line(0, -self.h_obj, self.pos.x, -self.h_obj * (1 - self.pos.x / self.focal))
-            line(-self.pos.x, -self.h_obj * (-self.pos.x + self.focal) / (self.pos_obj + self.focal), 0, -self.h_obj * self.focal / (self.pos_obj + self.focal))
-            line(0, -self.h_obj * self.focal / (self.pos_obj + self.focal), self.pos.x, -self.h_obj * self.focal / (self.pos_obj + self.focal))
+        if self.object_position > 0:
+            line(-self.position.x, self.height_object * self.position.x / self.object_position, self.position.x, -self.height_object * self.position.x / self.object_position)
+            line(-self.position.x, -self.height_object, 0, -self.height_object)
+            line(0, -self.height_object, self.position.x, -self.height_object * (1 - self.position.x / self.focal_length))
+            line(-self.position.x, -self.height_object * (-self.position.x + self.focal_length) / (self.object_position + self.focal_length), 0, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
+            line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length), self.position.x, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
             stroke(ray_color, 0.3)
-            line(0, -self.h_obj, self.pos_obj, -self.h_obj)
-            line(0, -self.h_obj * self.focal / (self.pos_obj + self.focal), self.pos_obj, -self.h_obj)
+            line(0, -self.height_object, self.object_position, -self.height_object)
+            line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length), self.object_position, -self.height_object)
 
         popMatrix()
 
@@ -113,67 +113,67 @@ class DivergingLens(ConvergingLens):
     def draw_lens(self):
         textSize(12)
         pushMatrix()
-        translate(self.pos.x, self.pos.y)  # Centro da origem do sistema de coordenadas
+        translate(self.position.x, self.position.y)  # Centro da origem do sistema de coordenadas
         # Lente
         fill(blue1)
         stroke(blue1)
         strokeWeight(3)
-        line(0, self.pos.y, 0, -self.pos.y)
+        line(0, self.position.y, 0, -self.position.y)
         beginShape(TRIANGLES)
-        vertex(-6, self.pos.y)
-        vertex(6, self.pos.y)
-        vertex(0, self.pos.y - 15)
-        vertex(-6, -self.pos.y)
-        vertex(6, -self.pos.y)
-        vertex(0, -self.pos.y + 15)
+        vertex(-6, self.position.y)
+        vertex(6, self.position.y)
+        vertex(0, self.position.y - 15)
+        vertex(-6, -self.position.y)
+        vertex(6, -self.position.y)
+        vertex(0, -self.position.y + 15)
         endShape()
         # Eixo optico
         strokeWeight(1)
         stroke(gray1)
         fill(gray1)
-        line(-self.pos.x, 0, self.pos.x, 0)
+        line(-self.position.x, 0, self.position.x, 0)
         # Focos
-        line(-self.focal, -2, -self.focal, 2)
-        text("F", -self.focal, -5)
-        line(self.focal, -2, self.focal, 2)
-        text("F'", self.focal, -5)
+        line(-self.focal_length, -2, -self.focal_length, 2)
+        text("F", -self.focal_length, -5)
+        line(self.focal_length, -2, self.focal_length, 2)
+        text("F'", self.focal_length, -5)
         popMatrix()
 
     def draw_rays(self, ray_color):
         pushMatrix()
-        translate(self.pos.x, self.pos.y)
+        translate(self.position.x, self.position.y)
         strokeWeight(2)
         stroke(ray_color, .8)
-        if self.pos_obj < 0:
-            line(self.pos_obj, -self.h_obj, self.pos.x, -self.h_obj * self.pos.x / self.pos_obj)  # passa pela origem
-            line(self.pos_obj, -self.h_obj, 0, -self.h_obj)  # paralelo ao eixo optico
-            line(0, -self.h_obj, self.pos.x, -self.h_obj + (self.pos.x * self.h_obj) / self.focal)
-            line(self.pos_obj, -self.h_obj, 0, -self.h_obj * self.focal / (self.pos_obj + self.focal))  # raio que se prolonga no F
-            line(0, -self.h_obj * self.focal / (self.pos_obj + self.focal), self.pos.x, -self.h_obj * self.focal / (self.pos_obj + self.focal))  # raio emergente paralelo
+        if self.object_position < 0:
+            line(self.object_position, -self.height_object, self.position.x, -self.height_object * self.position.x / self.object_position)  # passa pela origem
+            line(self.object_position, -self.height_object, 0, -self.height_object)  # paralelo ao eixo optico
+            line(0, -self.height_object, self.position.x, -self.height_object + (self.position.x * self.height_object) / self.focal_length)
+            line(self.object_position, -self.height_object, 0, -self.height_object * self.focal_length / (self.object_position + self.focal_length))  # raio que se prolonga no F
+            line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length), self.position.x, -self.height_object * self.focal_length / (self.object_position + self.focal_length))  # raio emergente paralelo
             stroke(ray_color, 0.25)  # prolongamentos
-            line(self.focal, 0, self.pos.x, -self.h_obj + (self.pos.x * self.h_obj) / self.focal)  # prolongamento que passa pelo F'
-            line(0, -self.h_obj * self.focal / (self.pos_obj + self.focal), -self.focal, 0)  # prolongamento no F
-            line(0, -self.gamma * self.h_obj, self.pos_img, -self.gamma * self.h_obj)
-        if self.pos_obj > 0:
-            line(-self.pos.x, self.h_obj * self.pos.x / self.pos_obj, self.pos.x, -self.h_obj * self.pos.x / self.pos_obj)  # passa pela origem
-            line(-self.pos.x, -self.h_obj, 0, -self.h_obj)  # paralelo ao eixo optico
-            line(0, -self.h_obj, self.pos.x, -self.h_obj * (1 - self.pos.x / self.focal))  # a partir do F'
-            if self.pos_obj + self.focal < 0:  # objeto antes do F
-                line(-self.pos.x, -self.h_obj * (-self.pos.x + self.focal) / (self.pos_obj + self.focal), 0, -self.h_obj * self.focal / (self.pos_obj + self.focal))
-                line(0, -self.h_obj * self.focal / (self.pos_obj + self.focal), self.pos.x, -self.h_obj * self.focal / (self.pos_obj + self.focal))
+            line(self.focal_length, 0, self.position.x, -self.height_object + (self.position.x * self.height_object) / self.focal_length)  # prolongamento que passa pelo F'
+            line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length), -self.focal_length, 0)  # prolongamento no F
+            line(0, -self.gamma * self.height_object, self.image_position, -self.gamma * self.height_object)
+        if self.object_position > 0:
+            line(-self.position.x, self.height_object * self.position.x / self.object_position, self.position.x, -self.height_object * self.position.x / self.object_position)  # passa pela origem
+            line(-self.position.x, -self.height_object, 0, -self.height_object)  # paralelo ao eixo optico
+            line(0, -self.height_object, self.position.x, -self.height_object * (1 - self.position.x / self.focal_length))  # a partir do F'
+            if self.object_position + self.focal_length < 0:  # objeto antes do F
+                line(-self.position.x, -self.height_object * (-self.position.x + self.focal_length) / (self.object_position + self.focal_length), 0, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
+                line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length), self.position.x, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
                 stroke(ray_color, 0.25)  # prolongamentos
-                line(0, -self.h_obj, self.pos_obj, -self.h_obj)  # paralelo ao eixo optico
-                line(self.focal, 0, 0, -self.h_obj)  # a partir do F'
-                line(0, -self.h_obj * self.focal / (self.pos_obj + self.focal), self.pos_obj, -self.h_obj)
+                line(0, -self.height_object, self.object_position, -self.height_object)  # paralelo ao eixo optico
+                line(self.focal_length, 0, 0, -self.height_object)  # a partir do F'
+                line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length), self.object_position, -self.height_object)
 
-            if (self.pos_obj + self.focal) > 0:
-                line(-self.pos.x, -self.h_obj * (-self.pos.x + self.focal) / (self.pos_obj + self.focal), 0, -self.h_obj * self.focal / (self.pos_obj + self.focal))  # passa pelo F
-                line(0, -self.h_obj * self.focal / (self.pos_obj + self.focal), self.pos.x, -self.h_obj * self.focal / (self.pos_obj + self.focal))  # raio emergente paralelo ao eixo optico
+            if (self.object_position + self.focal_length) > 0:
+                line(-self.position.x, -self.height_object * (-self.position.x + self.focal_length) / (self.object_position + self.focal_length), 0, -self.height_object * self.focal_length / (self.object_position + self.focal_length))  # passa pelo F
+                line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length), self.position.x, -self.height_object * self.focal_length / (self.object_position + self.focal_length))  # raio emergente paralelo ao eixo optico
                 stroke(ray_color, 0.25)  # prolongamentos
-                line(0, -self.h_obj, self.pos_obj, -self.h_obj)  # paralelo ao eixo optico
-                line(self.pos_img, -self.h_obj * self.focal / (self.pos_obj + self.focal), self.pos.x, -self.h_obj * self.focal / (self.pos_obj + self.focal))  # paralelo ao eixo optico
-                line(self.pos_img, -self.h_obj * self.focal / (self.pos_obj + self.focal), 0, -self.h_obj)  # a partir do F'
-                line(0, -self.h_obj * self.focal / (self.pos_obj + self.focal), self.pos_obj, -self.h_obj)
+                line(0, -self.height_object, self.object_position, -self.height_object)  # paralelo ao eixo optico
+                line(self.image_position, -self.height_object * self.focal_length / (self.object_position + self.focal_length), self.position.x, -self.height_object * self.focal_length / (self.object_position + self.focal_length))  # paralelo ao eixo optico
+                line(self.image_position, -self.height_object * self.focal_length / (self.object_position + self.focal_length), 0, -self.height_object)  # a partir do F'
+                line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length), self.object_position, -self.height_object)
 
         popMatrix()
 
@@ -218,7 +218,7 @@ def draw():
     fill(gray1)
     textSize(12)
 
-    if mouseX > (w1 + mirror.pos_obj - 30) and mouseX < (w1 + mirror.pos_obj + 30) and mouseY < (h1 + mirror.h_obj) and mouseY > (h1 - mirror.h_obj):
+    if mouseX > (w1 + mirror.object_position - 30) and mouseX < (w1 + mirror.object_position + 30) and mouseY < (h1 + mirror.height_object) and mouseY > (h1 - mirror.height_object):
         over = True
         active_color = red1
     else:
@@ -241,12 +241,12 @@ def painel():
     rect(0, height - 20, width, 20)
     textSize(12)
     fill(white1)
-    if mirror.pos_obj < 0:
+    if mirror.object_position < 0:
         text("Real Object", width / 12, height - 5)
     else:
         text("Virtual Object", width / 12, height - 5)
 
-    if mirror.pos_img < 0:
+    if mirror.image_position < 0:
         text("Virtual Image", width / 4, height - 5)
     else:
         text("Real Image", width / 4, height - 5)
