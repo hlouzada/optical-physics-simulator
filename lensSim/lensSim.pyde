@@ -1,13 +1,13 @@
 class ConvergingLens(object):
     def __init__(self, focal, pos):
         self.focal_length = focal
-        self.pos = pos
+        self.position = pos
         self.image_position = None
         self.object_position = None
         self.gamma = None
         self.height_object = None
 
-    def set_object(self, pos, height=None):
+    def set_object(self, position, height=None):
         self.object_position = position.x
         if not self.height_object or height:
             self.height_object = height
@@ -193,8 +193,8 @@ def setup():
     w1 = int(width / 2)
     h1 = int(height / 2 - h2)
 
-    #mirror = ConvergingLens(focal, PVector(w1,h1))
-    mirror = DivergingLens(-focal, PVector(w1, h1))
+    mirror = ConvergingLens(focal, PVector(w1,h1))
+    #mirror = DivergingLens(-focal, PVector(w1, h1))
     mirror.set_object(PVector(-2 * focal, 0), height / 10)
 
     smooth()
