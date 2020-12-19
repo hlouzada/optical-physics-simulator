@@ -41,10 +41,6 @@ convergingLens = 1
 divergingLens = 2
 convexMirror = 3
 concaveMirror = 4
-# Shows if we are using lens or mirror
-#global type
-
-
 
 def setup():
     size(1000, 500)
@@ -204,6 +200,16 @@ def draw_object(object_instance):
 """
 ------------------------ MOUSE FUNCTIONS ----------------------------------
 """
+
+def mouseWheel(event):
+    concave.focal_length += event.count
+    concave._calculate()
+    convex.focal_length += event.count
+    convex._calculate()
+    converging.focal_length += event.count
+    converging._calcul()
+    diverging.focal_length += event.count
+    diverging._calcul()
 
 # Checks if the mouse is pressed and sees what screen to goes to
 def mousePressed():
