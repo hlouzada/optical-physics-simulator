@@ -49,6 +49,10 @@ concaveMirror = 4
 def setup():
     size(1000, 500)
     background(0xff180639)
+    smooth()
+    strokeCap(SQUARE)
+    frameRate(30)
+    textAlign(CENTER, BASELINE)
     
     # Loading the images from the buttons
     convergingImg = loadImage("converging-button.png")
@@ -75,26 +79,48 @@ def setup():
     concaveButton = Button(PVector(100, 325), 800, 80, concaveImg, concaveHighlight)
     menuButton = Button(PVector(590, 10), 400, 40, menuImg, menuHighlight)
     
-    # Setting up mirrors:
-    mirrorSetup()
-    lensSetup()
+    
+    global black1, gray1, red1, white1, blue1
+    # colors
+    colorMode(RGB, 1.0)
+    black1 = color(0xff000000)
+    gray1 = color(0xffC1C1C1)
+    red1 = color(0xffF47F6B)
+    white1 = color(0xffFFFFFF)
+    blue1 = color(0xff0099CC)
+    
+    global img
+    #object image
+    img = loadImage("white-up-pointing-index_261d.png")
+    
+    # variables to verify if object is on hover or to move
+    global over, move
+    over = False
+    move = False
+    
+    # position of the lens or mirror
+    global w1, h1, h2
+    h2 = 12  # space for the info bar
+    w1 = int(width / 2)
+    h1 = int(height / 2 - h2)
+    
+    # Setting up mirrors and lens:
+    global concave, convex, converging, diverging
+    concave, convex = mirrorSetup()
+    converging, diverging = lensSetup()
 
 def draw():
     # Checking screen and drawing different screens
     if screenState == menuScreen:
         drawMenu()
     elif screenState == convergingLens:
-        type = "lens"
-        mirrorDraw(converging, type)
+        draw_object(converging)
     elif screenState == divergingLens:
-        type = "lens"
-        mirrorDraw(diverging, type)
+        draw_object(diverging)
     elif screenState == convexMirror:
-        type = "mirrors"
-        mirrorDraw(convex, type)
+        draw_object(convex)
     elif screenState == concaveMirror:
-        type = "mirrors"
-        mirrorDraw(concave, type)
+        draw_object(concave)
     else:
         textSize(24)
         strokeWeight(1)
@@ -110,56 +136,26 @@ def draw():
 """
     
 def mirrorSetup():
-
-    global img, over, move, h2, w1, h1, mirror, black1, gray1, red1, white1, blue1, concave, convex
-
-    img = loadImage("white-up-pointing-index_261d.png")
-
-    over = False
-    move = False
-    h2 = 12
-
-    radius = width / 3
-
-    w1 = int(width / 2)
-    h1 = int(height / 2 - h2)
     
-    # colors
-    colorMode(RGB, 1.0)
-    black1 = color(0xff000000)
-    gray1 = color(0xffC1C1C1)
-    red1 = color(0xffF47F6B)
-    white1 = color(0xffFFFFFF)
-    blue1 = color(0xff0099CC)
+    radius = width / 3
 
     concave = ConcaveMirror(radius, PVector(w1, h1), img, gray1, blue1)
     convex = ConvexMirror(radius, PVector(w1, h1), img, gray1, blue1)
     concave.set_object(PVector(concave.focal_length, 0), height / 10)
     convex.set_object(PVector(convex.focal_length, 0), height / 10)
-
-    smooth()
-    strokeCap(SQUARE)
-    frameRate(15)
-    textAlign(CENTER, BASELINE)
+    
+    return concave, convex
     
 def lensSetup():
     
-    global converging, diverging
-    
     focal = width / 8
 
-    w1 = int(width / 2)
-    h1 = int(height / 2 - h2)
-    
     converging = ConvergingLens(focal, PVector(w1,h1), img, gray1, blue1)
     diverging = DivergingLens(-focal, PVector(w1, h1), img, gray1, blue1)
     converging.set_object(PVector(-2 * focal, 0), height / 10)
     diverging.set_object(PVector(-2 * focal, 0), height / 10)
 
-    smooth()
-    strokeCap(SQUARE)
-    frameRate(15)
-    textAlign(CENTER, BASELINE)
+    return converging, diverging
     
     
 """
@@ -176,7 +172,7 @@ def drawMenu():
     concaveButton.buttonDraw()
 
 # Drawing the mirror types
-def mirrorDraw(mirror, type):
+def draw_object(object_instance):
     global over
     background(0xff180639)
     fill(gray1)
@@ -184,7 +180,7 @@ def mirrorDraw(mirror, type):
     noTint()
     menuButton.buttonDraw()
 
-    if mouseX > (w1 + mirror.object_position - 30) and mouseX < (w1 + mirror.object_position + 30) and mouseY < (h1 + mirror.height_object) and mouseY > (h1 - mirror.height_object):
+    if mouseX > (w1 + object_instance.object_position - 30) and mouseX < (w1 + object_instance.object_position + 30) and mouseY < (h1 + object_instance.height_object) and mouseY > (h1 - object_instance.height_object):
         over = True
         active_color = red1
     else:
@@ -192,16 +188,16 @@ def mirrorDraw(mirror, type):
         active_color = gray1
 
     if move:
-        mirror.set_object(PVector(mouseX - w1, 0))
+        object_instance.set_object(PVector(mouseX - w1, 0))
 
-    if type == "lens":
-        mirror.draw_lens()
-    elif type == "mirrors":
-        mirror.draw_mirror()
-    mirror.draw_object(active_color)
-    mirror.draw_image(active_color)
-    mirror.draw_rays(red1)
-    painel(mirror)
+    if isinstance(object_instance, (ConvergingLens, DivergingLens)):
+        object_instance.draw_lens()
+    elif isinstance(object_instance, (ConcaveMirror, ConvexMirror)):
+        object_instance.draw_mirror()
+    object_instance.draw_object(active_color)
+    object_instance.draw_image(active_color)
+    object_instance.draw_rays(red1)
+    painel(object_instance)
     
     
 

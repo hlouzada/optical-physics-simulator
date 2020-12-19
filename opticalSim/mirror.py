@@ -1,7 +1,6 @@
 #! python
 # -*- coding: utf-8 -*-
 
-
 # Class that defines a concave mirror
 class ConcaveMirror(object):
 
