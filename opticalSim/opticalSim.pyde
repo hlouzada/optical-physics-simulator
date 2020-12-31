@@ -99,15 +99,14 @@ def setup():
     h2 = 12  # space for the info bar
     w1 = int(width / 2)
     h1 = int(height / 2 - h2)
-    
-    # Setting up mirrors and lens:
-    global concave, convex, converging, diverging
-    concave, convex = mirrorSetup()
-    converging, diverging = lensSetup()
 
 def draw():
     # Checking screen and drawing different screens
     if screenState == menuScreen:
+        # Setting up mirrors and lens
+        # calling after changing to main menu if focal distance / object position were changed
+        mirrorSetup()
+        lensSetup()
         drawMenu()
     elif screenState == convergingLens:
         draw_object(converging)
@@ -132,6 +131,7 @@ def draw():
 """
     
 def mirrorSetup():
+    global concave, convex
     
     radius = width / 3
 
@@ -140,9 +140,8 @@ def mirrorSetup():
     concave.set_object(PVector(concave.focal_length, 0), height / 10)
     convex.set_object(PVector(convex.focal_length, 0), height / 10)
     
-    return concave, convex
-    
 def lensSetup():
+    global converging, diverging
     
     focal = width / 8
 
@@ -150,8 +149,6 @@ def lensSetup():
     diverging = DivergingLens(-focal, PVector(w1, h1), img, gray1, blue1)
     converging.set_object(PVector(-2 * focal, 0), height / 10)
     diverging.set_object(PVector(-2 * focal, 0), height / 10)
-
-    return converging, diverging
     
     
 """
