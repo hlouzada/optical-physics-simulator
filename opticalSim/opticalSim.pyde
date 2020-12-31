@@ -4,7 +4,7 @@ from lens import ConvergingLens, DivergingLens
 
 # Class that defines a button
 class Button(object):
-    
+
     def __init__(self, position, bWidth, bHeight, img, highlight):
         # Position of the button
         self.position = position
@@ -18,22 +18,21 @@ class Button(object):
         self.over = False
         self.pressed = False
 
-        
     def buttonDraw(self):
-        
+
         self._mouse_position(mouseX, mouseY)
         if self.over:
             image(self.highlight, self.position.x, self.position.y, self.bWidth, self.bHeight)
         else:
             image(self.img, self.position.x, self.position.y, self.bWidth, self.bHeight)
-        
-        
+
     def _mouse_position(self, X, Y):
-        if (X >= self.position.x) and (X <= self.position.x + self.bWidth) and (Y >= self.position.y) and (Y <= self.position.y + self.bHeight) :
+        if (X >= self.position.x) and (X <= self.position.x + self.bWidth) and (Y >= self.position.y) and (Y <= self.position.y + self.bHeight):
             self.over = True
         else:
             self.over = False
-            
+
+
 # Variables that indicate which screen will be shown
 screenState = 0
 menuScreen = 0
@@ -42,6 +41,7 @@ divergingLens = 2
 convexMirror = 3
 concaveMirror = 4
 
+
 def setup():
     size(1000, 500)
     background(0xff180639)
@@ -49,7 +49,7 @@ def setup():
     strokeCap(SQUARE)
     frameRate(30)
     textAlign(CENTER, BASELINE)
-    
+
     # Loading the images from the buttons
     convergingImg = loadImage("converging-button.png")
     convergingHighlight = loadImage("converging-button-pressed.png")
@@ -61,44 +61,39 @@ def setup():
     concaveHighlight = loadImage("concave-button-pressed.png")
     menuImg = loadImage("menu-button.png")
     menuHighlight = loadImage("menu-button-pressed.png")
-    
+
     # Buttons
-    global convergingButton
-    global divergingButton
-    global convexButton
-    global concaveButton
-    global menuButton
-    # Declaring buttons
+    global convergingButton, divergingButton, convexButton, concaveButton, menuButton
     convergingButton = Button(PVector(100, 55), 800, 80, convergingImg, convergingHighlight)
     divergingButton = Button(PVector(100, 145), 800, 80, divergingImg, divergingHighlight)
     convexButton = Button(PVector(100, 235), 800, 80, convexImg, convexHighlight)
     concaveButton = Button(PVector(100, 325), 800, 80, concaveImg, concaveHighlight)
     menuButton = Button(PVector(590, 10), 400, 40, menuImg, menuHighlight)
-    
-    
-    global black1, gray1, red1, white1, blue1
+
     # colors
+    global black1, gray1, red1, white1, blue1
     colorMode(RGB, 1.0)
     black1 = color(0xff000000)
     gray1 = color(0xffC1C1C1)
     red1 = color(0xffF47F6B)
     white1 = color(0xffFFFFFF)
     blue1 = color(0xff0099CC)
-    
+
+    # object image
     global img
-    #object image
     img = loadImage("white-up-pointing-index_261d.png")
-    
+
     # variables to verify if object is on hover or to move
     global over, move
     over = False
     move = False
-    
+
     # position of the lens or mirror
     global w1, h1, h2
     h2 = 12  # space for the info bar
     w1 = int(width / 2)
     h1 = int(height / 2 - h2)
+
 
 def draw():
     # Checking screen and drawing different screens
@@ -119,43 +114,44 @@ def draw():
     else:
         textSize(24)
         strokeWeight(1)
-        stroke(color(0,0,0))
-        fill(color(0,0,0))
+        stroke(color(0, 0, 0))
+        fill(color(0, 0, 0))
         textAlign(CENTER, CENTER)
-        text("Oops, Something went wrong.", width/2, height/2, width, height,)
+        text("Oops, Something went wrong.", width / 2, height / 2, width, height,)
 
-    
-    
+
 """
 ------------------------SET UP FUNCTIONS----------------------------------
 """
-    
+
+
 def mirrorSetup():
     global concave, convex
-    
+
     radius = width / 3
 
     concave = ConcaveMirror(radius, PVector(w1, h1), img, gray1, blue1)
     convex = ConvexMirror(radius, PVector(w1, h1), img, gray1, blue1)
     concave.set_object(PVector(concave.focal_length, 0), height / 10)
     convex.set_object(PVector(convex.focal_length, 0), height / 10)
-    
+
+
 def lensSetup():
     global converging, diverging
-    
+
     focal = width / 8
 
-    converging = ConvergingLens(focal, PVector(w1,h1), img, gray1, blue1)
+    converging = ConvergingLens(focal, PVector(w1, h1), img, gray1, blue1)
     diverging = DivergingLens(-focal, PVector(w1, h1), img, gray1, blue1)
     converging.set_object(PVector(-2 * focal, 0), height / 10)
     diverging.set_object(PVector(-2 * focal, 0), height / 10)
-    
-    
+
+
 """
 ------------------------ DRAW FUNCTIONS----------------------------------
 """
 
-# Drawing the menu buttons    
+# Drawing the menu buttons
 def drawMenu():
     noTint()
     background(0xff180639)
@@ -163,6 +159,7 @@ def drawMenu():
     divergingButton.buttonDraw()
     convexButton.buttonDraw()
     concaveButton.buttonDraw()
+
 
 # Drawing the mirror types
 def draw_object(object_instance):
@@ -191,12 +188,12 @@ def draw_object(object_instance):
     object_instance.draw_image(active_color)
     object_instance.draw_rays(red1)
     painel(object_instance)
-    
-    
+
 
 """
 ------------------------ MOUSE FUNCTIONS ----------------------------------
 """
+
 
 def mouseWheel(event):
     concave.focal_length += event.count
@@ -207,6 +204,7 @@ def mouseWheel(event):
     converging._calcul()
     diverging.focal_length += event.count
     diverging._calcul()
+
 
 # Checks if the mouse is pressed and sees what screen to goes to
 def mousePressed():
@@ -226,16 +224,18 @@ def mousePressed():
             screenState = convexMirror
         if concaveButton.over:
             screenState = concaveMirror
-    
-    
+
+
 def mouseReleased():
     global move
     move = False
-    
+
+
 """
 ------------------------ AUXILIARY FUNCTIONS----------------------------------
 """
-    
+
+
 def painel(mirror):
     fill(black1)
     noStroke()
