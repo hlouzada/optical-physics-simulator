@@ -2,6 +2,7 @@
 from mirror import ConcaveMirror, ConvexMirror
 from lens import ConvergingLens, DivergingLens
 
+
 # Class that defines a button
 class Button(object):
 
@@ -128,7 +129,7 @@ def mirrorSetup():
 
     concave = ConcaveMirror(radius, PVector(w1, h1), img, gray1, blue1)
     convex = ConvexMirror(radius, PVector(w1, h1), img, gray1, blue1)
-    concave.set_object(PVector(concave.focal_length, 0), height / 10)
+    concave.set_object(PVector(-concave.focal_length * 3 / 2, 0), height / 10)
     convex.set_object(PVector(convex.focal_length, 0), height / 10)
 
 
@@ -146,6 +147,7 @@ def lensSetup():
 """
 ------------------------ DRAW FUNCTIONS----------------------------------
 """
+
 
 # Drawing the menu buttons
 def drawMenu():
