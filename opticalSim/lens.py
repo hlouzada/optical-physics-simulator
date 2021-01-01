@@ -19,6 +19,17 @@ class ConvergingLens(object):
             self.height_object = height
         self._calcul()
 
+    @property
+    def focal_length(self):
+        return self.__focal_length
+
+    @focal_length.setter
+    def focal_length(self, f):
+        if f != 0:
+            self.__focal_length = f
+        if hasattr(self, "object_position"):
+            self._calcul()
+
     def _calcul(self):
         if (self.object_position + self.focal_length) != 0 and self.object_position != 0:
             self.image_position = int(

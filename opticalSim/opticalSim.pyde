@@ -195,13 +195,9 @@ def draw_object(object_instance):
 
 def mouseWheel(event):
     concave.focal_length += event.count
-    concave._calculate()
     convex.focal_length += event.count
-    convex._calculate()
     converging.focal_length += event.count
-    converging._calcul()
     diverging.focal_length += event.count
-    diverging._calcul()
 
 
 # Checks if the mouse is pressed and sees what screen to goes to

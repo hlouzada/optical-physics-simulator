@@ -22,6 +22,17 @@ class ConcaveMirror(object):
             self.height_object = height
         self._calculate()
 
+    @property
+    def focal_length(self):
+        return self.__focal_length
+
+    @focal_length.setter
+    def focal_length(self, f):
+        if f != 0:
+            self.__focal_length = f
+        if hasattr(self, "object_position"):
+            self._calculate()
+
     # Calculates position and size of the image
     def _calculate(self):
         # Verificar para termos certeza que não estamos dividindo por zero
@@ -193,10 +204,10 @@ class ConvexMirror(ConcaveMirror):
             line(0, -self.gamma * self.height_object, self.position.x, -self.gamma * self.height_object)
             line(0, -self.height_object, self.position.x, -self.height_object - (self.position.x * self.height_object) / self.focal_length)
             line(0, 0, self.position.x, self.gamma * self.height_object * self.position.x / self.image_position)
-            
+
             if (self.object_position + self.focal_length != 0):
                 line(self.object_position, -self.height_object, 0, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
-            
+
             if self.object_position + self.focal_length < 0:
                 stroke(ray_color, .3)
                 line(0, -self.height_object * self.focal_length / (self.object_position + self.focal_length), -self.position.x, -self.height_object * self.focal_length / (self.object_position + self.focal_length))
