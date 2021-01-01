@@ -15,22 +15,18 @@ class Button(object):
         self.bHeight = bHeight
         # color of the button when hover
         self.highlight = highlight
-        self.over = False
-        self.pressed = False
 
     def buttonDraw(self):
-
-        self._mouse_position(mouseX, mouseY)
         if self.over:
             image(self.highlight, self.position.x, self.position.y, self.bWidth, self.bHeight)
         else:
             image(self.img, self.position.x, self.position.y, self.bWidth, self.bHeight)
 
-    def _mouse_position(self, X, Y):
-        if (X >= self.position.x) and (X <= self.position.x + self.bWidth) and (Y >= self.position.y) and (Y <= self.position.y + self.bHeight):
-            self.over = True
-        else:
-            self.over = False
+    @property
+    def over(self):
+        if (mouseX >= self.position.x) and (mouseX <= self.position.x + self.bWidth) and (mouseY >= self.position.y) and (mouseY <= self.position.y + self.bHeight):
+            return True
+        return False
 
 
 # Variables that indicate which screen will be shown
