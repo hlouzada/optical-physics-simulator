@@ -128,7 +128,7 @@ def mirrorSetup():
     radius = width / 3
 
     concave = ConcaveMirror(radius, PVector(w1, h1), img, gray1, blue1)
-    convex = ConvexMirror(radius, PVector(w1, h1), img, gray1, blue1)
+    convex = ConvexMirror(-radius, PVector(w1, h1), img, gray1, blue1)
     concave.set_object(PVector(-concave.focal_length * 3 / 2, 0), height / 10)
     convex.set_object(PVector(convex.focal_length, 0), height / 10)
 
@@ -236,12 +236,27 @@ def painel(mirror):
     rect(0, height - 20, width, 20)
     textSize(12)
     fill(white1)
-    if mirror.object_position < 0:
-        text("Real Object", width / 12, height - 5)
-    else:
-        text("Virtual Object", width / 12, height - 5)
+    
+    virtual = mirror.image_position < 0
 
-    if mirror.image_position < 0:
+    if isinstance(mirror, ConcaveMirror):
+        real_object_text = "Concave Mirror"
+        virtual_object_text = "Convex Mirror"
+    elif isinstance(mirror, ConvexMirror):
+        virtual_object_text = "Concave Mirror"
+        real_object_text = "Convex Mirror"
+    else:
+        real_object_text = "Real Object"
+        virtual_object_text = "Virtual Object"
+
+    if mirror.object_position < 0:
+        text(real_object_text, width / 12, height - 5)
+    else:
+        text(virtual_object_text, width / 12, height - 5)
+        if isinstance(mirror, (ConcaveMirror, ConvexMirror)):
+            virtual = not virtual
+
+    if virtual:
         text("Virtual Image", width / 4, height - 5)
     else:
         text("Real Image", width / 4, height - 5)
