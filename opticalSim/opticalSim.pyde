@@ -2,7 +2,6 @@
 from mirror import ConcaveMirror, ConvexMirror
 from lens import ConvergingLens, DivergingLens
 
-print(PFont.list())
 # Class that defines a button
 class Button(object):
 
@@ -116,7 +115,7 @@ def draw():
         stroke(color(0, 0, 0))
         fill(color(0, 0, 0))
         textAlign(CENTER, CENTER)
-        text("Oops, Something went wrong.", width / 2, height / 2, width, height,)
+        text("Oops, Something went wrong.", width / 2, height / 2)
 
 
 """

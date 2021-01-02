@@ -143,18 +143,6 @@ class ConcaveMirror(object):
 
 # Class that defines a convex mirror
 class ConvexMirror(ConcaveMirror):
-
-    def __init__(self, radius, position, img, gray1, blue1):
-        self.focal_length = -radius / 2
-        self.position = position
-        self.image_position = None
-        self.object_position = None
-        self.gamma = None  # ratio between height of the image and height of the object
-        self.height_object = None
-        self.img = img
-        self.gray = gray1
-        self.blue1 = blue1
-
     # Draws the mirror and the focus and optical axis of the mirror
     def draw_mirror(self):
         textSize(12)
