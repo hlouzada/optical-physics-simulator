@@ -2,7 +2,7 @@
 from mirror import ConcaveMirror, ConvexMirror
 from lens import ConvergingLens, DivergingLens
 
-
+print(PFont.list())
 # Class that defines a button
 class Button(object):
 
@@ -46,6 +46,8 @@ def setup():
     strokeCap(SQUARE)
     frameRate(30)
     textAlign(CENTER, BASELINE)
+    
+    textFont(createFont('Consolas', 24, True))
 
     # Loading the images from the buttons
     convergingImg = loadImage("converging-button.png")
@@ -163,8 +165,6 @@ def drawMenu():
 def draw_object(object_instance):
     global over
     background(0xff180639)
-    fill(gray1)
-    textSize(12)
     noTint()
     menuButton.buttonDraw()
 
@@ -234,7 +234,7 @@ def painel(mirror):
     fill(black1)
     noStroke()
     rect(0, height - 20, width, 20)
-    textSize(12)
+    textSize(15.5)
     fill(white1)
     
     virtual = mirror.image_position < 0
@@ -261,6 +261,6 @@ def painel(mirror):
     else:
         text("Real Image", width / 4, height - 5)
 
-    text("\u0194 transversal = " + nfp(mirror.gamma, 2, 1), width / 2, height - 5)
-    text("\u0194 lateral = " + nfp(pow(mirror.gamma, 2), 2, 1),
+    text(u"\u0194 transversal = " + nfp(mirror.gamma, 2, 1), width / 2, height - 5)
+    text(u"\u0194 lateral = " + nfp(pow(mirror.gamma, 2), 2, 1),
          5 * width / 6, height - 5)
